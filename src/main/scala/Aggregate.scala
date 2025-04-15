@@ -47,13 +47,11 @@ def aggregateCompiler: AggregateGrammar ~> AggregateState = new (AggregateGramma
         (importValue, stack, exportValue, state) <- State.get[(Import, Stack, Export, ComputationalState)]
         _ = stack.align("neighboring")
         currentPath = stack.currentPath.mkString
-        _ = println(currentPath)
         neighborValues = importValue.messages
           .filter(_._2.contains(currentPath))
           .map((id, valueTree) => id -> valueTree(currentPath).asInstanceOf[T])
         field = Field(value, neighborValues)
         _ = stack.dealign()
-        _ = println(s"ending: $currentPath")
         result = field.asInstanceOf[T]
         _ <- State.set((importValue, stack, exportValue.updated(currentPath, value), state)) // Update the import with the new field
       yield result
