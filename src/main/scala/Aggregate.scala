@@ -34,8 +34,8 @@ def aggregateCompiler: AggregateGrammar ~> AggregateState = new (AggregateGramma
         currentPath <- getCurrentPath
         neighborValues <- getNeighborValuesAtPath[T](currentPath)
         field = Field(value, neighborValues)
-        _ <- dealignUpdate
         _ <- updateDeviceMessage(currentPath, value)
+        _ <- dealignUpdate
       yield field.asInstanceOf[T]
     case AggregateGrammar.Repeating(initialState, body) =>
       for
