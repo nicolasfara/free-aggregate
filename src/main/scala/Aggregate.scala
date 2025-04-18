@@ -54,7 +54,7 @@ def aggregateCompiler: AggregateGrammar ~> AggregateState = new (AggregateGramma
         currentPath <- getCurrentPath
         previousState <- getDeviceStateOrDefault[T](currentPath, initialValue)
         neighborValues <- getNeighborValuesAtPath[T](currentPath)
-        field = Field(initialValue, neighborValues)
+        field = Field(previousState, neighborValues)
         result <- reduce(body(field))(state)
         _ <- updateDeviceState[T](currentPath, result)
         _ <- updateDeviceMessage(currentPath, result)
