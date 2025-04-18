@@ -1,6 +1,7 @@
 import scala.collection.mutable
 
-case class InvocationCoordinate(token: String, count: Int)
+case class InvocationCoordinate(token: String, count: Int):
+  override def toString: String = s"$token.$count"
 
 class Stack:
   opaque type Path[T] = List[T]

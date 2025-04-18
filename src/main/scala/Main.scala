@@ -7,15 +7,17 @@
     "InvocationCoordinate(neighboring,0)" -> 2,
     "InvocationCoordinate(neighboring,1)" -> 20
   )
-  val importValue = Import(Map.empty, Map(1 -> export1, 2 -> export2), Stack())
-  val ((imp, toSend), result) = msg.foldMap(aggregateCompiler).run((importValue, Map.empty)).value
+//  val importValue = Import(Map.empty, Map(1 -> export1, 2 -> export2), Stack())
+  val importValue = Import(Map.empty, Map.empty, Stack())
+  val ((imp, toSend), result) = aggregateProgram.foldMap(aggregateCompiler).run((importValue, Map.empty)).value
   println(imp.state)
   println(toSend)
   println(result)
 
-def msg =
-  for
-    f <- neighboring(10)
-    g <- neighboring(11)
-    r <- repeating(0)(x => if x < 10 then x + 1 else x)
-  yield f
+def aggregateProgram = for f <- share(0): field =>
+    for
+      a <- neighboring(11)
+      b <- neighboring(12)
+      res = (a + b).min()
+    yield res
+yield f
