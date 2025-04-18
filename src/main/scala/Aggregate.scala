@@ -12,7 +12,7 @@ enum AggregateGrammar[T]:
 
 type Aggregate[T] = Free[AggregateGrammar, T]
 
-def reduce[T](result: Aggregate[T] | T)(state: (Import, DeviceMessage)): AggregateState[T] =
+private def reduce[T](result: Aggregate[T] | T)(state: (Import, DeviceMessage)): AggregateState[T] =
   result match
     case aggregate: Aggregate[T] @unchecked =>
       val (updatedState, result) = aggregate.foldMap(aggregateCompiler).run(state).value
@@ -47,7 +47,19 @@ def aggregateCompiler: AggregateGrammar ~> AggregateState = new (AggregateGramma
         _ <- updateDeviceState[T](currentPath, result)
         _ <- dealignUpdate
       yield result
-    case AggregateGrammar.Share(initialValue, body) => ???
+    case AggregateGrammar.Share(initialValue, body) =>
+      for
+        _ <- alignUpdate("share")
+        state <- State.get[(Import, DeviceMessage)]
+        currentPath <- getCurrentPath
+        previousState <- getDeviceStateOrDefault[T](currentPath, initialValue)
+        neighborValues <- getNeighborValuesAtPath[T](currentPath)
+        field = Field(initialValue, neighborValues)
+        result <- reduce(body(field))(state)
+        _ <- updateDeviceState[T](currentPath, result)
+        _ <- updateDeviceMessage(currentPath, result)
+        _ <- dealignUpdate
+      yield result
 
 def branch[T](condition: Boolean)(th: => T)(el: => T): Aggregate[T] =
   Free.liftF(AggregateGrammar.Branch(condition, () => th, () => el))
