@@ -14,7 +14,8 @@
   println(toSend)
   println(result)
 
-def aggregateProgram = for f <- share(0): field =>
+def aggregateProgram = for
+  f <- share(0): field =>
     for
       a <- neighboring(11)
       b <- neighboring(12)
