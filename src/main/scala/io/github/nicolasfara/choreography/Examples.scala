@@ -10,8 +10,13 @@ object Examples:
   def simpleProtocol: Choreography[Unit] = for
     aliceMsg <- locally[Alice, String](_ => "Hi, Bob!")
     bobMsg <- comm[Alice, Bob, String](aliceMsg)
-    _ <- locally[Bob, Unit](extract => {
+    condition <- locally[Bob, Boolean](extract => {
       val msg = extract(bobMsg)
       println(s"Bob received message: $msg")
+      msg == "Hi, Bob!"
     })
+    _ <- conditional(condition) {
+      case true  => pure(10)
+      case false => pure(20)
+    }
   yield ()
