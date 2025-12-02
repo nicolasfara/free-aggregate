@@ -1,4 +1,7 @@
+package io.github.nicolasfara.aggregate
+
 import cats.data.State
+import io.github.nicolasfara.aggregate.Import
 
 type DeviceState = Map[String, Any]
 type ValueTree = Map[String, Any]

@@ -1,3 +1,7 @@
+package io.github.nicolasfara.aggregate
+
+import io.github.nicolasfara.aggregate.InvocationCoordinate
+
 import scala.collection.mutable
 
 case class InvocationCoordinate(token: String, count: Int):

@@ -1,8 +1,10 @@
-import AggregateGrammar.Neighboring
-import AggregateState.*
+package io.github.nicolasfara.aggregate
+
+import cats.data.State
 import cats.free.Free
 import cats.~>
-import cats.data.State
+import AggregateGrammar.Neighboring
+import AggregateState.*
 
 enum AggregateGrammar[T]:
   case Branch(condition: Boolean, th: () => Aggregate[T] | T, el: () => Aggregate[T] | T)

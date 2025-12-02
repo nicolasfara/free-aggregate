@@ -1,3 +1,7 @@
+package io.github.nicolasfara.aggregate
+
+import cats.free.Free
+
 @main def hello(): Unit =
   val export1 = Map(
     "InvocationCoordinate(neighboring,0)" -> 1,
@@ -14,7 +18,7 @@
   println(toSend)
   println(result)
 
-def aggregateProgram = for
+def aggregateProgram: Free[AggregateGrammar, Int] = for
   f <- share(0): field =>
     for
       a <- neighboring(11)

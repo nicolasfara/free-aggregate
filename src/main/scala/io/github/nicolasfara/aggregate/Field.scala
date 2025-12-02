@@ -1,3 +1,5 @@
+package io.github.nicolasfara.aggregate
+
 case class Field[T](local: T, neighbors: Map[Int, T])
 
 extension [T: Numeric as num](f: Field[T])
