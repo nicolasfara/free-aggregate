@@ -15,8 +15,8 @@ object Examples:
       println(s"Bob received message: $msg")
       msg == "Hi, Bob!"
     })
-    _ <- conditional(condition) {
-      case true  => pure(10)
-      case false => pure(20)
+    a <- conditional(condition) {
+      case true  => locally[Bob, Int](_ => 42)
+      case false => locally[Bob, Int](_ => -1)
     }
   yield ()
