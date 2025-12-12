@@ -32,7 +32,7 @@ object MultiParty:
 //  }
 
   trait PeerScope[P <: Peer]
-
+ 
 //  type TupleSpace <: { type Tie <: Single[Bob] & Single[Alice] }
 //  type Alice <: { type Tie <: Single[TupleSpace] }
 //  type Bob   <: { type Tie <: Single[TupleSpace] }
@@ -43,7 +43,7 @@ object MultiParty:
   enum MultiPartyGrammar[T]:
     case Placed[P <: Peer, V](value: PeerScope[P] => V) extends MultiPartyGrammar[V on P]
     case Unicast[V, From <: Peer, To <: TieToSingle[From]](value: V on From) extends MultiPartyGrammar[V on To]
-    case Broadcast[V, From <: Peer, To <: TieToMultiple[From]](value: V on From) extends MultiPartyGrammar[V on To]
+    case Multicast[V, From <: Peer, To <: TieToMultiple[From]](value: V on From) extends MultiPartyGrammar[V on To]
     case Await[V, Other <: Peer, P <: TieToSingle[Other]: PeerScope](placed: V on Other) extends MultiPartyGrammar[V]
     case FoldAwait[A, B, Other <: Peer, P <: TieToMultiple[Other]: PeerScope](placed: A on Other, zero: B)(
         f: (B, A) => B
